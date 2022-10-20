@@ -1,0 +1,82 @@
+1//
+Select City FROM supplier  --SELECT the city of s1
+Where Sno='s1';
+
+SELECT Sno FROM supplier
+WHERE (City='London' AND Sno<>'s1'); --Display Sno which have the same city as s1
+
+2//
+Select Sno from SHIPMENT
+Where (Pno='p2' AND Sno<>'s3')   --Displays the Sno for the suppliers who shipped at least one of the supplier 2(s2) parts
+INTERSECT
+Select Sno from SHIPMENT
+Where (Pno='p3'AND Sno<>'s3');
+
+3//
+Select Pno from PART
+WHERE Color='Red';      --SELECT the pno of the parts which are red
+
+Select Distinct Sno from SHIPMENT
+Where (Pno='p1' OR Pno='p4' OR Pno='p6');  --Displays the sno for the suppliers that have shipped at least one RED Part
+
+4//
+Select Pno from PART
+Where Color='Red';  --SELECT the pno of the parts which are red
+
+SELECT DISTINCT Sno FROM SHIPMENT
+WHERE NOT EXISTS 
+(SELECT Pno FROM SHIPMENT WHERE Pno<>'p1' OR Pno<>'p4' OR Pno<>'p6' ); --Displays the sno for the suppliers that haven't shipped red parts
+
+
+5//
+Select Pno from PART  
+Where Color='Red';  --SELECT the pno of the parts which are red
+
+SELECT DISTINCT Sno FROM SHIPMENT
+WHERE NOT EXISTS 
+(SELECT Pno FROM SHIPMENT WHERE (Pno<>'p2' OR Pno<>'p3' OR Pno<>'p5' )); --Displays the sno for the suppliers that have shipped only red parts
+
+6//
+SELECT Sno FROM Supplier
+MINUS
+SELECT DISTINCT Sno FROM SHIPMENT WHERE (Pno<>'p1' OR Pno<>'p2' OR Pno<>'p3' OR Pno<>'p4' OR Pno<>'p5' OR Pno<>'p6')  --Displays the sno for the supplier that haven't shipped any parts
+
+7//
+SELECT Pno FROM SHIPMENT
+WHERE Sno='s2';       --SELECT the parts shipped by supplier2 (s2)
+
+SELECT DISTINCT Sno from SHIPMENT
+Where ((Pno='p1' OR Pno='p2') AND Sno<>'s2')
+SELECT SName from supplier
+Where (Sno='s1' OR Sno='s4');  --Displays the sno of the suppliers that have shipped at least once part as s2
+
+8//
+SELECt DISTINCT * FROM Supplier
+WHERE PRICE<(SELECT AVG(PRICE) FROM SHIPMENT); --Displays all the information for the suppliers which have the price lower than the average
+
+9//
+SELECt DISTINCT * FROM SHIPMENT
+WHERE PRICE=(SELECT MAX(PRICE) FROM SHIPMENT);  --Displays the supplier no. which have the mamximum price 
+
+10//
+SELECt DISTINCT * FROM SHIPMENT
+WHERE PRICE*QTY=(SELECT MAX(PRICE*QTY) FROM SHIPMENT); --Displays the supplier no. which have the mamximum price(price*QTY); 
+
+
+11//
+SELECt DISTINCT Sno FROM SHIPMENT
+WHERE PRICE*QTY=(SELECT MAX(PRICE*QTY) FROM SHIPMENT);  --Select the supplier which make the most money.
+
+SELECT * FROM supplier  --Display all the information about that supplier
+WHERE Sno='s2';
+
+12//
+SELECT Sno,COUNT(Pno) FROM SHIPMENT GROUP BY Sno;  --Displays sno and the part that the supplier have shipped
+UNION
+SELECT Sno FROM SUPPLIER WHERE CITY IS NULL; --Displays sno which don't shhiped any parts
+
+13// 
+SELECT DISTINCT SHIPMENT.Sno,Sname,PRICE*QTY,COUNT(Pno) FROM SHIPMENT, SUPPLIER --Displays sno, name, the part that the supplier have shipped and total of parts shipped by a supplier
+GROUP BY SHIPMENT.Sno  
+UNION
+SELECT Sno FROM SUPPLIER WHERE CITY IS NULL;  ----Displays sno which don't shhiped any parts
