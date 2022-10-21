@@ -10,7 +10,7 @@ Select Sno from SHIPMENT
 Where (Pno='p2' AND Sno<>'s3')   --Displays the Sno for the suppliers who shipped at least one of the supplier 2(s2) parts
 INTERSECT
 Select Sno from SHIPMENT
-Where (Pno='p3'AND Sno<>'s3');
+Where (Pno='p1'AND Sno<>'s3');
 
 3//
 Select Pno from PART
